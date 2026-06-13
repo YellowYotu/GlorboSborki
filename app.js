@@ -25,7 +25,7 @@ const firebaseConfig = {
 };
 
 const CREATOR_KEY = "yellowyotu";
-const MAX_FILE_SIZE = 1024 * 1024 * 1024;
+const MAX_FILE_SIZE = 100 * 1024 * 1024;
 const ALLOWED_EXTENSIONS = [".zip", ".rar", ".7z"];
 
 const app = initializeApp(firebaseConfig);
@@ -62,7 +62,7 @@ const i18n = {
     noServerBuilds: "Пока нет сборок для всех",
     noLocalBuilds: "Пока нет личных сборок",
     uploadArchive: "Загрузить архив сборки",
-    uploadLimit: "Только .zip, .rar, .7z. Максимум 1 GB",
+    uploadLimit: "Только .zip, .rar, .7z. Максимум 100 MB",
     onlyMe: "Только для моего аккаунта",
     forEveryone: "Для всех после проверки",
     chooseFile: "Выбрать файл",
@@ -105,7 +105,7 @@ const i18n = {
     noServerBuilds: "No public builds yet",
     noLocalBuilds: "No private builds yet",
     uploadArchive: "Upload build archive",
-    uploadLimit: "Only .zip, .rar, .7z. Max 1 GB",
+    uploadLimit: "Only .zip, .rar, .7z. Max 100 MB",
     onlyMe: "Only for my account",
     forEveryone: "For everyone after review",
     chooseFile: "Choose file",

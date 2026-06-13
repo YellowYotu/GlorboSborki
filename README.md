@@ -47,3 +47,6 @@ service cloud.firestore {
   }
 }
 ```
+
+
+Upload limit changed to 100 MB to avoid Vercel 413.
