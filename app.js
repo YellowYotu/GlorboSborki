@@ -835,9 +835,9 @@ function validateFile(file) {
     return "Можно загружать только .zip, .rar или .7z";
   }
 
-  if (file.size > MAX_FILE_SIZE) {
-    return "Файл больше 1 GB";
-  }
+if (file.size > MAX_FILE_SIZE) {
+  return `Файл больше ${Math.floor(MAX_FILE_SIZE / 1024 / 1024)} MB`;
+}
 
   return "";
 }
