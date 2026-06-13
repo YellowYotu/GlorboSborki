@@ -1,35 +1,58 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Glorbo — Minecraft Builds</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="auth-screen" id="auth-screen">
     <div class="auth-card">
-      <div class="logo-big">G</div>
-      <h1 data-i18n="authTitle">Glorbo</h1>
-      <p class="subtitle" data-i18n="authSub">Войди или создай аккаунт</p>
-
-      <div class="auth-panel" id="login-panel">
-        <input id="login-name" autocomplete="username" placeholder="Никнейм">
-        <input id="login-password" type="password" autocomplete="current-password" placeholder="Пароль">
-        <button class="primary-btn" id="login-btn" data-i18n="login">Войти</button>
-        <div class="auth-switch-text" data-i18n="noAccount">Нету аккаунта?</div>
-        <button class="ghost-btn" id="open-register-btn" data-i18n="createAccount">Создать аккаунт</button>
+      <div class="brand-big">
+        <div class="logo-icon">G</div>
+        <div>
+          <h1>glorbo</h1>
+          <p>v1.0.0 — Closed Test</p>
+        </div>
       </div>
 
-      <div class="auth-panel hidden" id="register-panel">
-        <input id="register-name" autocomplete="username" placeholder="Никнейм">
-        <input id="register-password" type="password" autocomplete="new-password" placeholder="Пароль">
-        <input id="register-password-repeat" type="password" autocomplete="new-password" placeholder="Повторить пароль">
-        <button class="primary-btn" id="register-btn" data-i18n="register">Зарегистрироваться</button>
-        <button class="ghost-btn" id="back-login-btn" data-i18n="backLogin">Назад ко входу</button>
+      <div class="auth-mode" id="login-box">
+        <h2 data-i18n="loginTitle">Вход</h2>
+        <label data-i18n="nickname">Никнейм</label>
+        <input id="login-nickname" type="text" autocomplete="username" placeholder="nickname" />
+
+        <label data-i18n="password">Пароль</label>
+        <input id="login-password" type="password" autocomplete="current-password" placeholder="••••••" />
+
+        <button class="primary-btn" id="login-btn" data-i18n="loginBtn">Войти</button>
+        <div class="auth-error" id="login-error"></div>
+
+        <div class="auth-switch">
+          <span data-i18n="noAccount">Нету аккаунта?</span>
+          <button class="link-btn" id="show-register-btn" data-i18n="createAccount">Создать аккаунт</button>
+        </div>
       </div>
 
-      <div class="form-error" id="auth-error"></div>
+      <div class="auth-mode hidden" id="register-box">
+        <h2 data-i18n="registerTitle">Регистрация</h2>
+        <label data-i18n="nickname">Никнейм</label>
+        <input id="register-nickname" type="text" autocomplete="username" placeholder="nickname" />
+
+        <label data-i18n="password">Пароль</label>
+        <input id="register-password" type="password" autocomplete="new-password" placeholder="••••••" />
+
+        <label data-i18n="repeatPassword">Повторить пароль</label>
+        <input id="register-password-repeat" type="password" autocomplete="new-password" placeholder="••••••" />
+
+        <button class="primary-btn" id="register-btn" data-i18n="registerBtn">Зарегистрироваться</button>
+        <div class="auth-error" id="register-error"></div>
+
+        <div class="auth-switch">
+          <span data-i18n="hasAccount">Уже есть аккаунт?</span>
+          <button class="link-btn" id="show-login-btn" data-i18n="loginBtn">Войти</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -40,18 +63,20 @@
         <span class="logo-text">glorbo</span>
       </div>
     </div>
+
     <div class="sidebar-links">
-      <a href="#" class="nav-item active" data-page-target="builds"><span class="nav-ico">📦</span> <span data-i18n="builds">Сборки</span></a>
-      <a href="#" class="nav-item" data-page-target="chat"><span class="nav-ico">💬</span> <span data-i18n="chat">Чат</span></a>
-      <a href="#" class="nav-item creator-only hidden" data-page-target="requests"><span class="nav-ico">✅</span> <span data-i18n="requests">Заявки</span></a>
-      <a href="#" class="nav-item" data-page-target="settings"><span class="nav-ico">⚙️</span> <span data-i18n="settings">Настройки</span></a>
-      <a href="#" class="nav-item" data-page-target="info"><span class="nav-ico">ℹ️</span> <span data-i18n="info">Инфо</span></a>
+      <button class="nav-item active" data-page="builds"><span>📦</span><b data-i18n="navBuilds">Сборки</b></button>
+      <button class="nav-item" data-page="chat"><span>💬</span><b data-i18n="navChat">Чат</b></button>
+      <button class="nav-item creator-only hidden" data-page="requests"><span>🛡️</span><b data-i18n="navRequests">Заявки</b></button>
+      <button class="nav-item" data-page="settings"><span>⚙️</span><b data-i18n="navSettings">Настройки</b></button>
+      <button class="nav-item" data-page="info"><span>ℹ️</span><b data-i18n="navInfo">Инфо</b></button>
     </div>
   </nav>
 
   <main class="main">
     <div class="topbar-user">
       <span class="username-text" id="top-username">Guest</span>
+      <span class="top-role" id="top-role">Player</span>
       <div class="user-avatar" id="top-avatar">?</div>
     </div>
 
@@ -63,25 +88,31 @@
 
       <button class="create-btn" id="scroll-upload-btn" data-i18n="uploadBuild">✦ Загрузить сборку</button>
 
-      <h2 class="section-title" data-i18n="serverBuilds">Серверные сборки</h2>
+      <h3 data-i18n="serverBuilds">Серверные сборки</h3>
       <div class="cards-grid" id="server-builds-grid"></div>
-      <div class="empty-state" id="server-empty" data-i18n="emptyServer">Пока нет сборок для всех</div>
+      <div class="empty-line" id="server-empty" data-i18n="noServerBuilds">Пока нет сборок для всех</div>
 
-      <h2 class="section-title" data-i18n="localBuilds">Мои локальные сборки</h2>
+      <h3 data-i18n="localBuilds">Мои локальные сборки</h3>
       <div class="cards-grid" id="local-builds-grid"></div>
-      <div class="empty-state" id="local-empty" data-i18n="emptyLocal">Пока нет личных сборок</div>
+      <div class="empty-line" id="local-empty" data-i18n="noLocalBuilds">Пока нет личных сборок</div>
 
       <div class="upload-zone" id="upload-zone">
         <div class="upload-icon">📦</div>
-        <div class="upload-title" data-i18n="uploadTitle">Загрузить архив сборки</div>
-        <div class="upload-sub" data-i18n="uploadSub">Только .zip, .rar, .7z. Максимум 1 GB</div>
+        <div class="upload-title" data-i18n="uploadArchive">Загрузить архив сборки</div>
+        <div class="upload-sub" data-i18n="uploadLimit">Только .zip, .rar, .7z. Максимум 1 GB</div>
 
-        <div class="upload-type-box">
-          <label><input type="radio" name="upload-scope" value="private" checked> <span data-i18n="onlyMe">Только для моего аккаунта</span></label>
-          <label><input type="radio" name="upload-scope" value="public"> <span data-i18n="forAll">Для всех после проверки</span></label>
+        <div class="upload-choice">
+          <label>
+            <input type="radio" name="uploadScope" value="private" checked />
+            <span data-i18n="onlyMe">Только для моего аккаунта</span>
+          </label>
+          <label>
+            <input type="radio" name="uploadScope" value="publicRequest" />
+            <span data-i18n="forEveryone">Для всех после проверки</span>
+          </label>
         </div>
 
-        <input type="file" id="file-input" accept=".zip,.rar,.7z,application/zip,application/x-rar-compressed,application/x-7z-compressed">
+        <input type="file" id="file-input" accept=".zip,.rar,.7z,application/zip,application/x-rar-compressed,application/x-7z-compressed" />
         <button class="upload-btn" id="choose-file-btn" data-i18n="chooseFile">Выбрать файл</button>
         <div class="upload-status" id="upload-status"></div>
       </div>
@@ -89,13 +120,14 @@
 
     <section class="page hidden" id="page-chat">
       <div class="page-header">
-        <h1 data-i18n="chatTitle">Сообщения</h1>
-        <p class="subtitle" data-i18n="chatSub">Глобальный чат обновляется в реальном времени</p>
+        <h1 data-i18n="chatTitle">Чат</h1>
+        <p class="subtitle" data-i18n="chatSub">Сообщения обновляются в реальном времени</p>
       </div>
+
       <div class="chat-box" id="chat-box"></div>
-      <div class="chat-form">
-        <input id="chat-input" maxlength="500" placeholder="Сообщение...">
-        <button class="primary-btn" id="send-message-btn" data-i18n="send">Отправить</button>
+      <div class="chat-input-row">
+        <input id="chat-input" type="text" maxlength="500" placeholder="Сообщение..." />
+        <button class="primary-btn small" id="send-message-btn" data-i18n="send">Отправить</button>
       </div>
     </section>
 
@@ -104,8 +136,9 @@
         <h1 data-i18n="requestsTitle">Заявки на серверные сборки</h1>
         <p class="subtitle" data-i18n="requestsSub">Только Creator может принять или отклонить</p>
       </div>
+
       <div class="cards-grid" id="requests-grid"></div>
-      <div class="empty-state" id="requests-empty" data-i18n="emptyRequests">Заявок нет</div>
+      <div class="empty-line" id="requests-empty" data-i18n="noRequests">Пока нет заявок</div>
     </section>
 
     <section class="page hidden" id="page-settings">
@@ -116,40 +149,172 @@
 
       <div class="settings-layout">
         <div class="settings-nav">
-          <a href="#" class="setnav-item active" data-settings-target="account">👤 <span data-i18n="account">Аккаунт</span></a>
-          <a href="#" class="setnav-item" data-settings-target="language">🌐 <span data-i18n="language">Язык</span></a>
-          <a href="#" class="setnav-item" data-settings-target="themes">🎨 <span data-i18n="themes">Темы</span></a>
-          <a href="#" class="setnav-item setnav-reset" id="reset-theme-btn">🔄 <span data-i18n="reset">Сброс</span></a>
+          <button class="setnav-item active" data-tab="account" data-i18n="account">👤 Аккаунт</button>
+          <button class="setnav-item" data-tab="language" data-i18n="language">🌐 Язык</button>
+          <button class="setnav-item" data-tab="theme" data-i18n="theme">🎨 Тема</button>
         </div>
 
         <div class="settings-content">
           <div class="settings-tab" id="stab-account">
-            <h2 class="stab-title" data-i18n="account">Аккаунт</h2>
+            <h2 data-i18n="account">Аккаунт</h2>
             <div class="account-info">
-              <div class="acc-avatar" id="account-avatar">?</div>
-              <div class="account-details">
-                <div class="acc-name" id="account-name">Guest</div>
-                <div class="acc-role" id="account-role">Player</div>
+              <div class="acc-avatar" id="acc-avatar">?</div>
+              <div>
+                <div class="acc-name" id="acc-name">Guest</div>
+                <div class="acc-role" id="acc-role">Player</div>
               </div>
             </div>
-            <button class="danger-btn" id="logout-btn" data-i18n="logout">Выйти из аккаунта</button>
+
+            <button class="danger-btn" id="logout-btn" data-i18n="logout">Выйти с аккаунта</button>
           </div>
 
           <div class="settings-tab hidden" id="stab-language">
-            <h2 class="stab-title" data-i18n="language">Язык</h2>
-            <div class="language-actions">
-              <button class="ghost-btn lang-btn" data-lang="ru">Русский</button>
-              <button class="ghost-btn lang-btn" data-lang="en">English</button>
+            <h2 data-i18n="language">Язык</h2>
+            <div class="language-row">
+              <button class="secondary-btn" data-lang="ru">Русский</button>
+              <button class="secondary-btn" data-lang="en">English</button>
             </div>
           </div>
 
-          <div class="settings-tab hidden" id="stab-themes">
-            <h2 class="stab-title" data-i18n="themes">Темы</h2>
-            <div class="themes-grid">
-              <div class="theme-card active" data-theme="dark"><div class="theme-preview theme-prev-dark"><div class="tp-sidebar"></div><div class="tp-main"><div class="tp-bar"></div><div class="tp-card"></div></div></div><span>Dark</span></div>
-              <div class="theme-card" data-theme="light"><div class="theme-preview theme-prev-light"><div class="tp-sidebar"></div><div class="tp-main"><div class="tp-bar"></div><div class="tp-card"></div></div></div><span>Light</span></div>
-              <div class="theme-card" data-theme="ocean"><div class="theme-preview theme-prev-ocean"><div class="tp-sidebar"></div><div class="tp-main"><div class="tp-bar"></div><div class="tp-card"></div></div></div><span>Ocean</span></div>
-              <div class="theme-card" data-theme="violet"><div class="theme-preview theme-prev-violet"><div class="tp-sidebar"></div><div class="tp-main"><div class="tp-bar"></div><div class="tp-card"></div></div></div><span>Violet</span></div>
+          <div class="settings-tab hidden" id="stab-theme">
+            <h2 data-i18n="theme">Тема</h2>
+            <p class="tab-subtitle">Готовые красивые темы + полный кастом каждого элемента.</p>
+
+            <div class="theme-grid">
+              <button class="theme-card-btn" data-theme="dark">
+                <span class="theme-preview theme-preview-dark"></span>
+                <b>Dark</b>
+              </button>
+
+              <button class="theme-card-btn" data-theme="orange">
+                <span class="theme-preview theme-preview-orange"></span>
+                <b>Orange</b>
+              </button>
+
+              <button class="theme-card-btn" data-theme="violet">
+                <span class="theme-preview theme-preview-violet"></span>
+                <b>Violet</b>
+              </button>
+
+              <button class="theme-card-btn" data-theme="ocean">
+                <span class="theme-preview theme-preview-ocean"></span>
+                <b>Ocean</b>
+              </button>
+
+              <button class="theme-card-btn" data-theme="forest">
+                <span class="theme-preview theme-preview-forest"></span>
+                <b>Forest</b>
+              </button>
+
+              <button class="theme-card-btn" data-theme="sunset">
+                <span class="theme-preview theme-preview-sunset"></span>
+                <b>Sunset</b>
+              </button>
+
+              <button class="theme-card-btn" data-theme="ice">
+                <span class="theme-preview theme-preview-ice"></span>
+                <b>Ice</b>
+              </button>
+
+              <button class="theme-card-btn" data-theme="light">
+                <span class="theme-preview theme-preview-light"></span>
+                <b>Light</b>
+              </button>
+            </div>
+
+            <div class="custom-panel">
+              <div class="custom-panel-head">
+                <div>
+                  <h3>Кастом</h3>
+                  <p>Настрой фон, карточки, текст, кнопки, обводку и скругления.</p>
+                </div>
+
+                <div class="custom-actions-row">
+                  <button class="secondary-btn" id="save-custom-theme-btn">Save custom</button>
+                  <button class="secondary-btn" id="reset-custom-theme-btn">Reset</button>
+                </div>
+              </div>
+
+              <div class="custom-grid">
+                <div class="custom-row">
+                  <label>Фон страницы</label>
+                  <input type="color" data-custom-var="--bg-main" />
+                </div>
+
+                <div class="custom-row">
+                  <label>Фон сайдбара</label>
+                  <input type="color" data-custom-var="--bg-sidebar" />
+                </div>
+
+                <div class="custom-row">
+                  <label>Фон карточек</label>
+                  <input type="color" data-custom-var="--bg-card" />
+                </div>
+
+                <div class="custom-row">
+                  <label>Мягкий фон / поля</label>
+                  <input type="color" data-custom-var="--bg-soft" />
+                </div>
+
+                <div class="custom-row">
+                  <label>Основной текст</label>
+                  <input type="color" data-custom-var="--text-primary" />
+                </div>
+
+                <div class="custom-row">
+                  <label>Второй текст</label>
+                  <input type="color" data-custom-var="--text-secondary" />
+                </div>
+
+                <div class="custom-row">
+                  <label>Тусклый текст</label>
+                  <input type="color" data-custom-var="--text-muted" />
+                </div>
+
+                <div class="custom-row">
+                  <label>Акцент / кнопки</label>
+                  <input type="color" data-custom-var="--accent" />
+                </div>
+
+                <div class="custom-row">
+                  <label>Цвет обводки</label>
+                  <input type="color" data-custom-var="--border" />
+                </div>
+
+                <div class="custom-row">
+                  <label>Обводка при наведении</label>
+                  <input type="color" data-custom-var="--border-hover" />
+                </div>
+
+                <div class="custom-row custom-row-check">
+                  <label>Включить обводку</label>
+                  <input type="checkbox" id="custom-border-enabled" checked />
+                </div>
+
+                <div class="custom-row">
+                  <label>Толщина обводки</label>
+                  <input type="range" min="0" max="5" step="1" data-custom-var="--border-size" />
+                  <span class="custom-value" data-custom-value="--border-size"></span>
+                </div>
+
+                <div class="custom-row">
+                  <label>Скругление карточек</label>
+                  <input type="range" min="0" max="34" step="1" data-custom-var="--radius-card" />
+                  <span class="custom-value" data-custom-value="--radius-card"></span>
+                </div>
+
+                <div class="custom-row">
+                  <label>Скругление кнопок</label>
+                  <input type="range" min="0" max="40" step="1" data-custom-var="--radius-button" />
+                  <span class="custom-value" data-custom-value="--radius-button"></span>
+                </div>
+
+                <div class="custom-row">
+                  <label>Скругление полей</label>
+                  <input type="range" min="0" max="24" step="1" data-custom-var="--radius-input" />
+                  <span class="custom-value" data-custom-value="--radius-input"></span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -159,11 +324,13 @@
     <section class="page hidden" id="page-info">
       <div class="page-header">
         <h1 data-i18n="infoTitle">О сайте</h1>
-        <p class="subtitle" data-i18n="infoSub">Glorbo — платформа для Minecraft сборок</p>
+        <p class="subtitle">Glorbo — Minecraft Builds</p>
       </div>
+
       <div class="info-box">
-        <p><span data-i18n="infoText">Здесь можно хранить личные сборки, отправлять сборки на проверку и общаться в чате.</span></p>
-        <p class="version-line">v1.0.0 — Closed Test</p>
+        <p data-i18n="infoText">Сайт для загрузки личных и серверных сборок Minecraft.</p>
+        <br />
+        <strong>v1.0.0 — Closed Test</strong>
       </div>
     </section>
   </main>
