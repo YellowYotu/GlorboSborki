@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Glorbo — Minecraft Builds</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="auth-screen" id="auth-screen">
+    <div class="auth-card">
+      <div class="logo-big">G</div>
+      <h1 data-i18n="authTitle">Glorbo</h1>
+      <p class="subtitle" data-i18n="authSub">Войди или создай аккаунт</p>
+
+      <div class="auth-panel" id="login-panel">
+        <input id="login-name" autocomplete="username" placeholder="Никнейм">
+        <input id="login-password" type="password" autocomplete="current-password" placeholder="Пароль">
+        <button class="primary-btn" id="login-btn" data-i18n="login">Войти</button>
+        <div class="auth-switch-text" data-i18n="noAccount">Нету аккаунта?</div>
+        <button class="ghost-btn" id="open-register-btn" data-i18n="createAccount">Создать аккаунт</button>
+      </div>
+
+      <div class="auth-panel hidden" id="register-panel">
+        <input id="register-name" autocomplete="username" placeholder="Никнейм">
+        <input id="register-password" type="password" autocomplete="new-password" placeholder="Пароль">
+        <input id="register-password-repeat" type="password" autocomplete="new-password" placeholder="Повторить пароль">
+        <button class="primary-btn" id="register-btn" data-i18n="register">Зарегистрироваться</button>
+        <button class="ghost-btn" id="back-login-btn" data-i18n="backLogin">Назад ко входу</button>
+      </div>
+
+      <div class="form-error" id="auth-error"></div>
+    </div>
+  </div>
+
+  <nav class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo-wrap">
+        <div class="logo-icon">G</div>
+        <span class="logo-text">glorbo</span>
+      </div>
+    </div>
+    <div class="sidebar-links">
+      <a href="#" class="nav-item active" data-page-target="builds"><span class="nav-ico">📦</span> <span data-i18n="builds">Сборки</span></a>
+      <a href="#" class="nav-item" data-page-target="chat"><span class="nav-ico">💬</span> <span data-i18n="chat">Чат</span></a>
+      <a href="#" class="nav-item creator-only hidden" data-page-target="requests"><span class="nav-ico">✅</span> <span data-i18n="requests">Заявки</span></a>
+      <a href="#" class="nav-item" data-page-target="settings"><span class="nav-ico">⚙️</span> <span data-i18n="settings">Настройки</span></a>
+      <a href="#" class="nav-item" data-page-target="info"><span class="nav-ico">ℹ️</span> <span data-i18n="info">Инфо</span></a>
+    </div>
+  </nav>
+
+  <main class="main">
+    <div class="topbar-user">
+      <span class="username-text" id="top-username">Guest</span>
+      <div class="user-avatar" id="top-avatar">?</div>
+    </div>
+
+    <section class="page" id="page-builds">
+      <div class="page-header">
+        <h1 data-i18n="buildsTitle">Сборки Minecraft</h1>
+        <p class="subtitle" data-i18n="buildsSub">Личные и серверные сборки обновляются в реальном времени</p>
+      </div>
+
+      <button class="create-btn" id="scroll-upload-btn" data-i18n="uploadBuild">✦ Загрузить сборку</button>
+
+      <h2 class="section-title" data-i18n="serverBuilds">Серверные сборки</h2>
+      <div class="cards-grid" id="server-builds-grid"></div>
+      <div class="empty-state" id="server-empty" data-i18n="emptyServer">Пока нет сборок для всех</div>
+
+      <h2 class="section-title" data-i18n="localBuilds">Мои локальные сборки</h2>
+      <div class="cards-grid" id="local-builds-grid"></div>
+      <div class="empty-state" id="local-empty" data-i18n="emptyLocal">Пока нет личных сборок</div>
+
+      <div class="upload-zone" id="upload-zone">
+        <div class="upload-icon">📦</div>
+        <div class="upload-title" data-i18n="uploadTitle">Загрузить архив сборки</div>
+        <div class="upload-sub" data-i18n="uploadSub">Только .zip, .rar, .7z. Максимум 1 GB</div>
+
+        <div class="upload-type-box">
+          <label><input type="radio" name="upload-scope" value="private" checked> <span data-i18n="onlyMe">Только для моего аккаунта</span></label>
+          <label><input type="radio" name="upload-scope" value="public"> <span data-i18n="forAll">Для всех после проверки</span></label>
+        </div>
+
+        <input type="file" id="file-input" accept=".zip,.rar,.7z,application/zip,application/x-rar-compressed,application/x-7z-compressed">
+        <button class="upload-btn" id="choose-file-btn" data-i18n="chooseFile">Выбрать файл</button>
+        <div class="upload-status" id="upload-status"></div>
+      </div>
+    </section>
+
+    <section class="page hidden" id="page-chat">
+      <div class="page-header">
+        <h1 data-i18n="chatTitle">Сообщения</h1>
+        <p class="subtitle" data-i18n="chatSub">Глобальный чат обновляется в реальном времени</p>
+      </div>
+      <div class="chat-box" id="chat-box"></div>
+      <div class="chat-form">
+        <input id="chat-input" maxlength="500" placeholder="Сообщение...">
+        <button class="primary-btn" id="send-message-btn" data-i18n="send">Отправить</button>
+      </div>
+    </section>
+
+    <section class="page hidden creator-only" id="page-requests">
+      <div class="page-header">
+        <h1 data-i18n="requestsTitle">Заявки на серверные сборки</h1>
+        <p class="subtitle" data-i18n="requestsSub">Только Creator может принять или отклонить</p>
+      </div>
+      <div class="cards-grid" id="requests-grid"></div>
+      <div class="empty-state" id="requests-empty" data-i18n="emptyRequests">Заявок нет</div>
+    </section>
+
+    <section class="page hidden" id="page-settings">
+      <div class="page-header">
+        <h1 data-i18n="settingsTitle">Настройки</h1>
+        <p class="subtitle" data-i18n="settingsSub">Аккаунт, язык и тема</p>
+      </div>
+
+      <div class="settings-layout">
+        <div class="settings-nav">
+          <a href="#" class="setnav-item active" data-settings-target="account">👤 <span data-i18n="account">Аккаунт</span></a>
+          <a href="#" class="setnav-item" data-settings-target="language">🌐 <span data-i18n="language">Язык</span></a>
+          <a href="#" class="setnav-item" data-settings-target="themes">🎨 <span data-i18n="themes">Темы</span></a>
+          <a href="#" class="setnav-item setnav-reset" id="reset-theme-btn">🔄 <span data-i18n="reset">Сброс</span></a>
+        </div>
+
+        <div class="settings-content">
+          <div class="settings-tab" id="stab-account">
+            <h2 class="stab-title" data-i18n="account">Аккаунт</h2>
+            <div class="account-info">
+              <div class="acc-avatar" id="account-avatar">?</div>
+              <div class="account-details">
+                <div class="acc-name" id="account-name">Guest</div>
+                <div class="acc-role" id="account-role">Player</div>
+              </div>
+            </div>
+            <button class="danger-btn" id="logout-btn" data-i18n="logout">Выйти из аккаунта</button>
+          </div>
+
+          <div class="settings-tab hidden" id="stab-language">
+            <h2 class="stab-title" data-i18n="language">Язык</h2>
+            <div class="language-actions">
+              <button class="ghost-btn lang-btn" data-lang="ru">Русский</button>
+              <button class="ghost-btn lang-btn" data-lang="en">English</button>
+            </div>
+          </div>
+
+          <div class="settings-tab hidden" id="stab-themes">
+            <h2 class="stab-title" data-i18n="themes">Темы</h2>
+            <div class="themes-grid">
+              <div class="theme-card active" data-theme="dark"><div class="theme-preview theme-prev-dark"><div class="tp-sidebar"></div><div class="tp-main"><div class="tp-bar"></div><div class="tp-card"></div></div></div><span>Dark</span></div>
+              <div class="theme-card" data-theme="light"><div class="theme-preview theme-prev-light"><div class="tp-sidebar"></div><div class="tp-main"><div class="tp-bar"></div><div class="tp-card"></div></div></div><span>Light</span></div>
+              <div class="theme-card" data-theme="ocean"><div class="theme-preview theme-prev-ocean"><div class="tp-sidebar"></div><div class="tp-main"><div class="tp-bar"></div><div class="tp-card"></div></div></div><span>Ocean</span></div>
+              <div class="theme-card" data-theme="violet"><div class="theme-preview theme-prev-violet"><div class="tp-sidebar"></div><div class="tp-main"><div class="tp-bar"></div><div class="tp-card"></div></div></div><span>Violet</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page hidden" id="page-info">
+      <div class="page-header">
+        <h1 data-i18n="infoTitle">О сайте</h1>
+        <p class="subtitle" data-i18n="infoSub">Glorbo — платформа для Minecraft сборок</p>
+      </div>
+      <div class="info-box">
+        <p><span data-i18n="infoText">Здесь можно хранить личные сборки, отправлять сборки на проверку и общаться в чате.</span></p>
+        <p class="version-line">v1.0.0 — Closed Test</p>
+      </div>
+    </section>
+  </main>
+
+  <div class="version">v1.0.0 — Closed Test</div>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
