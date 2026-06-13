@@ -14,14 +14,6 @@ import {
   onSnapshot,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
-import {
-  getStorage,
-  ref,
-  uploadBytesResumable,
-  getDownloadURL,
-  deleteObject
-} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-storage.js";
-
 const firebaseConfig = {
   apiKey: "AIzaSyBmbyuk3_4jfXiOsGIq0s5f1XlY7-zURmw",
   authDomain: "glorbosborki.firebaseapp.com",
@@ -38,8 +30,6 @@ const ALLOWED_EXTENSIONS = [".zip", ".rar", ".7z"];
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const storage = getStorage(app);
-
 let currentUser = null;
 let currentLanguage = localStorage.getItem("glorbo-language") || "ru";
 let unsubscribeServerBuilds = null;
@@ -750,7 +740,7 @@ function renderBuilds(builds, type) {
       <div class="card-sub">Size: ${escapeHtml(formatSize(build.size || 0))}</div>
       <div class="card-actions">
         <a href="${escapeHtml(build.downloadUrl || "#")}" target="_blank" rel="noopener">Download</a>
-        ${canDelete ? `<button class="delete" data-delete-build="${escapeHtml(build.id)}" data-delete-type="${type}" data-storage-path="${escapeHtml(build.storagePath || "")}">Delete</button>` : ""}
+        ${canDelete ? `<button class="delete" data-delete-build="${escapeHtml(build.id)}" data-delete-type="${type}" data-github-asset-id="${escapeHtml(build.githubAssetId || "")}">Delete</button>` : ""}
       </div>
     `;
 
@@ -780,7 +770,7 @@ function renderRequests(requests) {
       <div class="card-actions">
         <a href="${escapeHtml(request.downloadUrl || "#")}" target="_blank" rel="noopener">Download</a>
         <button data-approve-request="${escapeHtml(request.id)}">Approve</button>
-        <button class="reject" data-reject-request="${escapeHtml(request.id)}" data-storage-path="${escapeHtml(request.storagePath || "")}">Reject</button>
+        <button class="reject" data-reject-request="${escapeHtml(request.id)}" data-github-asset-id="${escapeHtml(request.githubAssetId || "")}">Reject</button>
       </div>
     `;
 
@@ -871,26 +861,32 @@ async function uploadBuild(file) {
   const scope = document.querySelector("input[name='uploadScope']:checked")?.value || "private";
   const extension = fileExtension(file.name);
   const safeName = file.name.replace(/[^\w.\-а-яА-ЯёЁ]/g, "_");
-  const folder = scope === "private" ? "private" : "requests";
-  const storagePath = `builds/${folder}/${currentUser.id}/${Date.now()}_${safeName}`;
-  const storageRef = ref(storage, storagePath);
+  const uniqueName = `${Date.now()}_${currentUser.id}_${safeName}`;
 
   status.style.color = "var(--text-secondary)";
-  status.textContent = "0%";
+  status.textContent = "Загрузка в GitHub Releases...";
 
   try {
-    const task = uploadBytesResumable(storageRef, file, {
+    const params = new URLSearchParams({
+      fileName: uniqueName,
+      originalName: file.name,
       contentType: file.type || "application/octet-stream"
     });
 
-    await new Promise((resolve, reject) => {
-      task.on("state_changed", (snapshot) => {
-        const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-        status.textContent = progress + "%";
-      }, reject, resolve);
+    const response = await fetch(`/api/upload-build?${params.toString()}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": file.type || "application/octet-stream"
+      },
+      body: file
     });
 
-    const downloadUrl = await getDownloadURL(storageRef);
+    const result = await response.json().catch(() => null);
+
+    if (!response.ok || !result?.downloadUrl) {
+      throw new Error(result?.error || "GitHub Release upload failed");
+    }
+
     const payload = {
       name: file.name,
       searchName: file.name.toLowerCase(),
@@ -898,8 +894,11 @@ async function uploadBuild(file) {
       size: file.size,
       ownerId: currentUser.id,
       ownerNickname: currentUser.nickname,
-      storagePath,
-      downloadUrl,
+      storageProvider: "github-releases",
+      githubReleaseId: result.releaseId || null,
+      githubAssetId: result.assetId || null,
+      githubAssetName: result.assetName || uniqueName,
+      downloadUrl: result.downloadUrl,
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp()
     };
@@ -907,14 +906,14 @@ async function uploadBuild(file) {
     if (scope === "private") {
       await addDoc(collection(db, "localBuilds"), payload);
       status.style.color = "var(--green)";
-      status.textContent = "✅ Личная сборка загружена";
+      status.textContent = "✅ Личная сборка загружена в GitHub Releases";
     } else {
       await addDoc(collection(db, "buildRequests"), {
         ...payload,
         status: "pending"
       });
       status.style.color = "var(--green)";
-      status.textContent = "✅ Заявка отправлена Creator";
+      status.textContent = "✅ Файл загружен, заявка отправлена Creator";
     }
   } catch (error) {
     console.error("Upload failed:", error);
@@ -946,7 +945,10 @@ async function approveRequest(requestId) {
       size: data.size,
       ownerId: data.ownerId,
       ownerNickname: data.ownerNickname,
-      storagePath: data.storagePath,
+      storageProvider: data.storageProvider || "github-releases",
+      githubReleaseId: data.githubReleaseId || null,
+      githubAssetId: data.githubAssetId || null,
+      githubAssetName: data.githubAssetName || null,
       downloadUrl: data.downloadUrl,
       approvedBy: currentUser.id,
       createdAt: serverTimestamp(),
@@ -966,7 +968,7 @@ async function approveRequest(requestId) {
   }
 }
 
-async function rejectRequest(requestId, storagePath) {
+async function rejectRequest(requestId, githubAssetId) {
   if (currentUser?.role !== "Creator") {
     return;
   }
@@ -978,8 +980,8 @@ async function rejectRequest(requestId, storagePath) {
       updatedAt: serverTimestamp()
     });
 
-    if (storagePath) {
-      await deleteObject(ref(storage, storagePath)).catch(() => {});
+    if (githubAssetId) {
+      await deleteGithubAsset(githubAssetId).catch(() => {});
     }
 
     showToast("Заявка отклонена");
@@ -989,13 +991,13 @@ async function rejectRequest(requestId, storagePath) {
   }
 }
 
-async function deleteBuild(buildId, type, storagePath) {
+async function deleteBuild(buildId, type, githubAssetId) {
   try {
     const collectionName = type === "server" ? "serverBuilds" : "localBuilds";
     await deleteDoc(doc(db, collectionName, buildId));
 
-    if (storagePath) {
-      await deleteObject(ref(storage, storagePath)).catch(() => {});
+    if (githubAssetId) {
+      await deleteGithubAsset(githubAssetId).catch(() => {});
     }
 
     showToast("Сборка удалена");
@@ -1003,6 +1005,26 @@ async function deleteBuild(buildId, type, storagePath) {
     console.error("Delete failed:", error);
     showToast("Ошибка удаления: " + error.message);
   }
+}
+
+async function deleteGithubAsset(githubAssetId) {
+  const response = await fetch("/api/delete-github-asset", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      assetId: githubAssetId
+    })
+  });
+
+  const result = await response.json().catch(() => null);
+
+  if (!response.ok) {
+    throw new Error(result?.error || "GitHub asset delete failed");
+  }
+
+  return result;
 }
 
 async function sendMessage() {
@@ -1156,12 +1178,12 @@ function bindEvents() {
     }
 
     if (rejectId) {
-      rejectRequest(rejectId, event.target.dataset.storagePath || "");
+      rejectRequest(rejectId, event.target.dataset.githubAssetId || "");
       return;
     }
 
     if (deleteId) {
-      deleteBuild(deleteId, event.target.dataset.deleteType, event.target.dataset.storagePath || "");
+      deleteBuild(deleteId, event.target.dataset.deleteType, event.target.dataset.githubAssetId || "");
     }
   });
 }

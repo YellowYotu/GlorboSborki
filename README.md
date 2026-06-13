@@ -1,38 +1,40 @@
 # Glorbo v1.0.0 — Closed Test
 
-## Что починено
+## GitHub Releases версия
 
-- Полный проект заново, без старого hotfix-мусора.
-- `index.html` подключает правильный файл: `app.js`.
-- Логин и регистрация снова работают через Firestore.
-- Firebase Authentication НЕ нужен.
-- Никнейм + пароль сохраняются в `users/{nicknameLowerCase}`.
-- Старые аккаунты читаются.
-- `YellowYotu` автоматически получает роль `Creator`.
-- Если у `YellowYotu` в Firestore нет роли, сайт сам допишет `role: "Creator"` при входе/restore.
-- Нет падения `charAt`, если ник пустой/старый session object кривой.
-- Личные сборки видны только владельцу.
-- Серверные сборки видны всем.
-- Заявки на серверные сборки видны только Creator.
-- Чат realtime.
-- Сборки/requets/messages обновляются через `onSnapshot`.
-- Лимит файла: 1 GB.
-- Разрешены только `.zip`, `.rar`, `.7z`.
-- Версия: `v1.0.0 — Closed Test`.
-- Языки: русский/английский.
+- Firebase Storage больше НЕ используется.
+- Файлы сборок загружаются в GitHub Releases через Vercel API.
+- Firestore остаётся для users/messages/localBuilds/serverBuilds/buildRequests.
+- Лимит файла на сайте: 1 GB.
+- Разрешены только .zip, .rar, .7z.
+- Темы, кастом, чат, аккаунты и заявки оставлены.
 
-## Что включить в Firebase
+## Vercel Environment Variables
 
-Нужны только:
+Project → Settings → Environment Variables:
 
-1. Firestore Database
-2. Storage
+```text
+GITHUB_TOKEN=github_pat_...
+GITHUB_OWNER=YellowYotu
+GITHUB_REPO=GlorboSborki
+```
 
-Firebase Authentication не нужен.
+GitHub token classic scopes:
+```text
+repo
+workflow
+```
+
+## Важно
+
+Код отправляет файлы через `/api/upload-build` в GitHub Releases.
+Если очень большой файл не грузится, это может быть лимит Vercel на размер запроса, не ошибка сайта.
+
+## Firebase
+
+Нужен только Firestore. Firebase Storage можно не включать.
 
 ## Firestore test rules
-
-Firebase Console → Firestore Database → Rules:
 
 ```txt
 rules_version = '2';
@@ -45,68 +47,3 @@ service cloud.firestore {
   }
 }
 ```
-
-## Storage test rules
-
-Firebase Console → Storage → Rules:
-
-```txt
-rules_version = '2';
-
-service firebase.storage {
-  match /b/{bucket}/o {
-    match /{allPaths=**} {
-      allow read, write: if true;
-    }
-  }
-}
-```
-
-## Важно
-
-Это тестовые правила. Они открытые. Для закрытого теста нормально, но для публичного сайта надо закрывать.
-
-## Если загрузка падает CORS/403
-
-Почти всегда это не CORS, а Storage rules не опубликованы или Storage не включен.
-
-Проверь:
-- Storage включен.
-- Storage rules опубликованы.
-- В `app.js` `storageBucket` совпадает с Firebase Project settings.
-- Если в настройках Firebase указан другой bucket, замени его в `app.js`.
-
-Сейчас стоит:
-
-```js
-storageBucket: "glorbosborki.firebasestorage.app"
-```
-
-Если у тебя в Firebase написано `glorbosborki.appspot.com`, замени на него.
-
-
-## Темы и кастом
-
-Добавлены обратно красивые темы:
-- Dark
-- Orange
-- Violet
-- Ocean
-- Forest
-- Sunset
-- Ice
-- Light
-
-Добавлена кастом-вкладка:
-- цвет фона страницы;
-- цвет сайдбара;
-- цвет карточек;
-- цвет полей;
-- цвет текста;
-- цвет акцента;
-- включение/выключение обводки;
-- цвет обводки;
-- толщина обводки;
-- скругление карточек;
-- скругление кнопок;
-- скругление полей.
