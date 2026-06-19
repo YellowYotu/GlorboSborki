@@ -1406,3 +1406,215 @@ bindEvents();
 applyLanguage();
 initTheme();
 restoreSession();
+
+// ===== SITE CLOSED OVERLAY =====
+
+const CLOSED_TEXT = {
+    ru: {
+        title: "Сайт закрыт",
+        button: "Посмотреть причину",
+        lang: "English",
+        reason: `
+Нет серверов для хранения сборок.
+
+<br><br>
+
+Также делать такой сайт стало невыгодно.
+
+<br><br>
+
+Сейчас делается только:
+
+<br><br>
+
+<a
+href="https://friends-glorbo-chat.vercel.app/"
+target="_blank"
+>
+friends-glorbo-chat.vercel.app
+</a>
+`
+    },
+
+    en: {
+        title: "Site closed",
+        button: "Show reason",
+        lang: "Русский",
+        reason: `
+No servers are available for storing builds.
+
+<br><br>
+
+Also this website is no longer worth maintaining.
+
+<br><br>
+
+Currently only this project is being developed:
+
+<br><br>
+
+<a
+href="https://friends-glorbo-chat.vercel.app/"
+target="_blank"
+>
+friends-glorbo-chat.vercel.app
+</a>
+`
+    }
+};
+
+let currentClosedLanguage =
+    localStorage.getItem(
+        "closedLanguage"
+    ) || "ru";
+
+const overlay =
+    document.getElementById(
+        "site-closed-overlay"
+    );
+
+const title =
+    document.getElementById(
+        "closed-title"
+    );
+
+const reason =
+    document.getElementById(
+        "closed-reason"
+    );
+
+const reasonButton =
+    document.getElementById(
+        "reason-btn"
+    );
+
+const languageButton =
+    document.getElementById(
+        "lang-btn"
+    );
+
+function updateClosedOverlay() {
+
+    const text =
+        CLOSED_TEXT[
+            currentClosedLanguage
+        ];
+
+    title.textContent =
+        text.title;
+
+    reasonButton.textContent =
+        text.button;
+
+    languageButton.textContent =
+        text.lang;
+
+    reason.innerHTML =
+        text.reason;
+}
+
+reasonButton?.addEventListener(
+    "click",
+    () => {
+
+        reason.classList.toggle(
+            "hidden"
+        );
+
+    }
+);
+
+languageButton?.addEventListener(
+    "click",
+    () => {
+
+        currentClosedLanguage =
+            currentClosedLanguage === "ru"
+                ? "en"
+                : "ru";
+
+        localStorage.setItem(
+            "closedLanguage",
+            currentClosedLanguage
+        );
+
+        updateClosedOverlay();
+
+    }
+);
+
+updateClosedOverlay();
+
+/* Disable scroll */
+
+document.body.style.overflow =
+    "hidden";
+
+/* Restore overlay if removed */
+
+new MutationObserver(
+    () => {
+
+        if (
+            !document.body.contains(
+                overlay
+            )
+        ) {
+
+            document.body.prepend(
+                overlay
+            );
+
+        }
+
+    }
+).observe(
+    document.body,
+    {
+        childList: true
+    }
+);
+
+/* Disable keyboard */
+
+window.addEventListener(
+    "keydown",
+    (
+        event
+    ) => {
+
+        if (
+            event.key !== "F12"
+        ) {
+
+            event.preventDefault();
+
+        }
+
+    },
+    true
+);
+
+/* Disable mouse */
+
+document.addEventListener(
+    "click",
+    (
+        event
+    ) => {
+
+        if (
+            !event.target.closest(
+                "#site-closed-overlay"
+            )
+        ) {
+
+            event.preventDefault();
+
+            event.stopImmediatePropagation();
+
+        }
+
+    },
+    true
+);
