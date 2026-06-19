@@ -6,35 +6,41 @@
   <title>Glorbo — Minecraft Builds</title>
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
 
-  <div id="site-closed-overlay">
-    <div class="closed-modal">
-      <div class="brand-big">
-        <div class="logo-icon">G</div>
-        <div>
-          <h1>glorbo</h1>
-          <p id="closed-date">6/19/2026</p>
-        </div>
-      </div>
-      <div class="closed-status">🔴</div>
-      <h2 id="closed-title">Сайт закрыт</h2>
-      <p class="closed-subtitle">Glorbo Builds больше недоступен</p>
-      <div class="closed-buttons">
-        <button class="primary-btn" id="reason-btn">Посмотреть причину</button>
-        <button class="secondary-btn" id="lang-btn">English</button>
-      </div>
-      <div id="closed-reason" class="hidden">
-        Нет серверов для хранения сборок.
-        <br><br>
-        Также делать такой сайт стало невыгодно.
-        <br><br>
-        Сейчас делается только:
-        <br><br>
-        <a href="https://friends-glorbo-chat.vercel.app/" target="_blank">friends-glorbo-chat.vercel.app</a>
+<div id="site-closed-overlay">
+  <div class="closed-modal">
+    <div class="brand-big">
+      <div class="logo-icon">G</div>
+      <div>
+        <h1>glorbo</h1>
+        <p>6/19/2026</p>
       </div>
     </div>
+
+    <div style="font-size:50px;margin-bottom:16px;">🔴</div>
+
+    <h2 id="closed-title">Сайт закрыт</h2>
+
+    <button class="primary-btn" id="reason-btn">
+      Посмотреть причину
+    </button>
+
+    <button class="secondary-btn" id="lang-btn">
+      English
+    </button>
+
+    <div id="closed-reason" class="hidden">
+      Нет серверов для хранения сборок.<br><br>
+      Также делать такой сайт стало невыгодно.<br><br>
+      Сейчас делается только:<br><br>
+      <a href="https://friends-glorbo-chat.vercel.app/" target="_blank">
+      friends-glorbo-chat.vercel.app
+      </a>
+    </div>
   </div>
+</div>
 
   <div class="auth-screen" id="auth-screen">
     <div class="auth-card">
@@ -210,14 +216,45 @@
             <p class="tab-subtitle">Готовые красивые темы + полный кастом каждого элемента.</p>
 
             <div class="theme-grid">
-              <button class="theme-card-btn" data-theme="dark"><span class="theme-preview theme-preview-dark"></span><b>Dark</b></button>
-              <button class="theme-card-btn" data-theme="orange"><span class="theme-preview theme-preview-orange"></span><b>Orange</b></button>
-              <button class="theme-card-btn" data-theme="violet"><span class="theme-preview theme-preview-violet"></span><b>Violet</b></button>
-              <button class="theme-card-btn" data-theme="ocean"><span class="theme-preview theme-preview-ocean"></span><b>Ocean</b></button>
-              <button class="theme-card-btn" data-theme="forest"><span class="theme-preview theme-preview-forest"></span><b>Forest</b></button>
-              <button class="theme-card-btn" data-theme="sunset"><span class="theme-preview theme-preview-sunset"></span><b>Sunset</b></button>
-              <button class="theme-card-btn" data-theme="ice"><span class="theme-preview theme-preview-ice"></span><b>Ice</b></button>
-              <button class="theme-card-btn" data-theme="light"><span class="theme-preview theme-preview-light"></span><b>Light</b></button>
+              <button class="theme-card-btn" data-theme="dark">
+                <span class="theme-preview theme-preview-dark"></span>
+                <b>Dark</b>
+              </button>
+
+              <button class="theme-card-btn" data-theme="orange">
+                <span class="theme-preview theme-preview-orange"></span>
+                <b>Orange</b>
+              </button>
+
+              <button class="theme-card-btn" data-theme="violet">
+                <span class="theme-preview theme-preview-violet"></span>
+                <b>Violet</b>
+              </button>
+
+              <button class="theme-card-btn" data-theme="ocean">
+                <span class="theme-preview theme-preview-ocean"></span>
+                <b>Ocean</b>
+              </button>
+
+              <button class="theme-card-btn" data-theme="forest">
+                <span class="theme-preview theme-preview-forest"></span>
+                <b>Forest</b>
+              </button>
+
+              <button class="theme-card-btn" data-theme="sunset">
+                <span class="theme-preview theme-preview-sunset"></span>
+                <b>Sunset</b>
+              </button>
+
+              <button class="theme-card-btn" data-theme="ice">
+                <span class="theme-preview theme-preview-ice"></span>
+                <b>Ice</b>
+              </button>
+
+              <button class="theme-card-btn" data-theme="light">
+                <span class="theme-preview theme-preview-light"></span>
+                <b>Light</b>
+              </button>
             </div>
 
             <div class="custom-panel">
@@ -226,6 +263,7 @@
                   <h3>Кастом</h3>
                   <p>Настрой фон, карточки, текст, кнопки, обводку и скругления.</p>
                 </div>
+
                 <div class="custom-actions-row">
                   <button class="secondary-btn" id="save-custom-theme-btn">Save custom</button>
                   <button class="secondary-btn" id="reset-custom-theme-btn">Reset</button>
@@ -233,21 +271,84 @@
               </div>
 
               <div class="custom-grid">
-                <div class="custom-row"><label>Фон страницы</label><input type="color" data-custom-var="--bg-main" /></div>
-                <div class="custom-row"><label>Фон сайдбара</label><input type="color" data-custom-var="--bg-sidebar" /></div>
-                <div class="custom-row"><label>Фон карточек</label><input type="color" data-custom-var="--bg-card" /></div>
-                <div class="custom-row"><label>Мягкий фон / поля</label><input type="color" data-custom-var="--bg-soft" /></div>
-                <div class="custom-row"><label>Основной текст</label><input type="color" data-custom-var="--text-primary" /></div>
-                <div class="custom-row"><label>Второй текст</label><input type="color" data-custom-var="--text-secondary" /></div>
-                <div class="custom-row"><label>Тусклый текст</label><input type="color" data-custom-var="--text-muted" /></div>
-                <div class="custom-row"><label>Акцент / кнопки</label><input type="color" data-custom-var="--accent" /></div>
-                <div class="custom-row"><label>Цвет обводки</label><input type="color" data-custom-var="--border" /></div>
-                <div class="custom-row"><label>Обводка при наведении</label><input type="color" data-custom-var="--border-hover" /></div>
-                <div class="custom-row custom-row-check"><label>Включить обводку</label><input type="checkbox" id="custom-border-enabled" checked /></div>
-                <div class="custom-row"><label>Толщина обводки</label><input type="range" min="0" max="5" step="1" data-custom-var="--border-size" /><span class="custom-value" data-custom-value="--border-size"></span></div>
-                <div class="custom-row"><label>Скругление карточек</label><input type="range" min="0" max="34" step="1" data-custom-var="--radius-card" /><span class="custom-value" data-custom-value="--radius-card"></span></div>
-                <div class="custom-row"><label>Скругление кнопок</label><input type="range" min="0" max="40" step="1" data-custom-var="--radius-button" /><span class="custom-value" data-custom-value="--radius-button"></span></div>
-                <div class="custom-row"><label>Скругление полей</label><input type="range" min="0" max="24" step="1" data-custom-var="--radius-input" /><span class="custom-value" data-custom-value="--radius-input"></span></div>
+                <div class="custom-row">
+                  <label>Фон страницы</label>
+                  <input type="color" data-custom-var="--bg-main" />
+                </div>
+
+                <div class="custom-row">
+                  <label>Фон сайдбара</label>
+                  <input type="color" data-custom-var="--bg-sidebar" />
+                </div>
+
+                <div class="custom-row">
+                  <label>Фон карточек</label>
+                  <input type="color" data-custom-var="--bg-card" />
+                </div>
+
+                <div class="custom-row">
+                  <label>Мягкий фон / поля</label>
+                  <input type="color" data-custom-var="--bg-soft" />
+                </div>
+
+                <div class="custom-row">
+                  <label>Основной текст</label>
+                  <input type="color" data-custom-var="--text-primary" />
+                </div>
+
+                <div class="custom-row">
+                  <label>Второй текст</label>
+                  <input type="color" data-custom-var="--text-secondary" />
+                </div>
+
+                <div class="custom-row">
+                  <label>Тусклый текст</label>
+                  <input type="color" data-custom-var="--text-muted" />
+                </div>
+
+                <div class="custom-row">
+                  <label>Акцент / кнопки</label>
+                  <input type="color" data-custom-var="--accent" />
+                </div>
+
+                <div class="custom-row">
+                  <label>Цвет обводки</label>
+                  <input type="color" data-custom-var="--border" />
+                </div>
+
+                <div class="custom-row">
+                  <label>Обводка при наведении</label>
+                  <input type="color" data-custom-var="--border-hover" />
+                </div>
+
+                <div class="custom-row custom-row-check">
+                  <label>Включить обводку</label>
+                  <input type="checkbox" id="custom-border-enabled" checked />
+                </div>
+
+                <div class="custom-row">
+                  <label>Толщина обводки</label>
+                  <input type="range" min="0" max="5" step="1" data-custom-var="--border-size" />
+                  <span class="custom-value" data-custom-value="--border-size"></span>
+                </div>
+
+                <div class="custom-row">
+                  <label>Скругление карточек</label>
+                  <input type="range" min="0" max="34" step="1" data-custom-var="--radius-card" />
+                  <span class="custom-value" data-custom-value="--radius-card"></span>
+                </div>
+
+                <div class="custom-row">
+                  <label>Скругление кнопок</label>
+                  <input type="range" min="0" max="40" step="1" data-custom-var="--radius-button" />
+                  <span class="custom-value" data-custom-value="--radius-button"></span>
+                </div>
+
+                <div class="custom-row">
+                  <label>Скругление полей</label>
+                  <input type="range" min="0" max="24" step="1" data-custom-var="--radius-input" />
+                  <span class="custom-value" data-custom-value="--radius-input"></span>
+                </div>
               </div>
             </div>
           </div>
@@ -260,6 +361,7 @@
         <h1 data-i18n="infoTitle">О сайте</h1>
         <p class="subtitle">Glorbo — Minecraft Builds</p>
       </div>
+
       <div class="info-box">
         <p data-i18n="infoText">Сайт для загрузки личных и серверных сборок Minecraft.</p>
         <br />
